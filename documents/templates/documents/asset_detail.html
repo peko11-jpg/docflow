@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ asset.name }}</title>
+</head>
+<body>
+    <h1>{{ asset.name }}</h1>
+    <p>{{ asset.description }}</p>
+    <p>Lokacija: {{ asset.location }}</p>
+
+    <h2>Dokumenta</h2>
+    <ul>
+        {% for doc in documents %}
+            <li>
+                <a href="{{ doc.file.url }}">{{ doc.title }}</a>
+                ({{ doc.document_type }})
+            </li>
+        {% empty %}
+            <li>Nema dokumenata za ovu opremu.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -19,5 +19,10 @@
             <li>Nema dokumenata za ovu opremu.</li>
         {% endfor %}
     </ul>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Odjavi se</button>
+    </form>
 </body>
 </html>

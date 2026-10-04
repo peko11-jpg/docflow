@@ -14,13 +14,14 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "documents",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'documents',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -103,3 +104,8 @@ MAILERS = {
 }
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/asset/ugovor/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}   

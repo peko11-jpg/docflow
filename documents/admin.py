@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Asset, Document, NFCTag, Profile
+from .models import Asset, Document, NFCTag, Profile, AuditLog
 
 class ProfileAdmin(admin.ModelAdmin):
     def has_module_permission(self, request):
@@ -21,3 +21,4 @@ admin.site.register(Asset)
 admin.site.register(Document)
 admin.site.register(NFCTag)
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(AuditLog)

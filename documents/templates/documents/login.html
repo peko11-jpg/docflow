@@ -1,14 +1,252 @@
 <!DOCTYPE html>
-<html>
+<html lang="bs">
 <head>
-    <title>Prijava</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prijava | Evidencija opreme</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f6fb;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #1e293b;
+        }
+
+        /* Gornja navigacija */
+        .navbar {
+            background: #142b4a;
+            padding: 22px 7%;
+            color: white;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.12);
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+        }
+
+        .brand span {
+            color: #60a5fa;
+        }
+
+        /* Glavni dio */
+        .main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            border: 1px solid #e5eaf2;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.07);
+        }
+
+        .login-icon {
+            width: 62px;
+            height: 62px;
+            background: #eaf2ff;
+            color: #2563eb;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 29px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #142b4a;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        /* Django form polja */
+        .login-form p {
+            margin-bottom: 20px;
+        }
+
+        .login-form label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 9px;
+        }
+
+        .login-form input {
+            display: block;
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            color: #1e293b;
+            background: #ffffff;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .login-form input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.13);
+        }
+
+        .login-form input::placeholder {
+            color: #94a3b8;
+        }
+
+        .login-form ul {
+            color: #dc2626;
+            font-size: 13px;
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        .login-form .helptext {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .errorlist {
+            color: #dc2626;
+            font-size: 13px;
+            margin-bottom: 12px;
+            padding-left: 20px;
+        }
+
+        .login-button {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 14px;
+            margin-top: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .login-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            color: #64748b;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Podnožje */
+        .footer {
+            text-align: center;
+            padding: 22px 15px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 19px 22px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .main {
+                padding: 25px 16px;
+            }
+
+            .login-card {
+                padding: 28px 23px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Prijava</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Prijavi se</button>
-    </form>
+
+    <header class="navbar">
+        <div class="brand">
+            EVIDENCIJA <span>OPREME</span>
+        </div>
+    </header>
+
+    <main class="main">
+
+        <section class="login-card">
+
+            <div class="login-icon">🔐</div>
+
+            <h1>Dobro došli</h1>
+
+            <p class="subtitle">
+                Prijavite se na svoj nalog kako biste pristupili
+                sistemu za evidenciju opreme i dokumentacije.
+            </p>
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="login-button">
+                    Prijavi se →
+                </button>
+            </form>
+
+            <div class="security-note">
+                <span>🔒</span>
+                <span>Zaštićen pristup sistemu</span>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        Evidencija opreme &bull; Sistem za upravljanje opremom
+    </footer>
+
 </body>
 </html>
+```

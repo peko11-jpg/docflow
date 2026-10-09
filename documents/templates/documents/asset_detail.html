@@ -1,28 +1,452 @@
 <!DOCTYPE html>
-<html>
+<html lang="bs">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{{ asset.name }}</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Gornja navigacija */
+        .navbar {
+            background: #142b4a;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.12);
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .brand span {
+            color: #60a5fa;
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-btn {
+            background: #ffffff;
+            color: #142b4a;
+            border: none;
+            border-radius: 9px;
+            padding: 11px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dbeafe;
+            transform: translateY(-1px);
+        }
+
+        /* Glavni sadržaj */
+        .container {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 0 24px;
+        }
+
+        .page-label {
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .page-title {
+            font-size: clamp(28px, 4vw, 38px);
+            font-weight: 750;
+            color: #142b4a;
+            margin-bottom: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        /* Kartice */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e5eaf2;
+            border-radius: 16px;
+            padding: 26px;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #eaf2ff;
+            color: #2563eb;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .card-heading h2 {
+            font-size: 18px;
+            color: #142b4a;
+        }
+
+        .field-label {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .field-value {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #26364b;
+            overflow-wrap: anywhere;
+        }
+
+        .location-value {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 8px 13px;
+            border-radius: 8px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        /* Dokumenta */
+        .documents-card {
+            background: white;
+            border: 1px solid #e5eaf2;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+        }
+
+        .documents-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        .documents-header h2 {
+            font-size: 22px;
+            color: #142b4a;
+        }
+
+        .documents-count {
+            background: #eaf2ff;
+            color: #1d4ed8;
+            border-radius: 20px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .document-list {
+            list-style: none;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 17px;
+            border: 1px solid #e8edf5;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: 0.2s ease;
+        }
+
+        .document-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .document-item:hover {
+            border-color: #93baff;
+            background: #f8fbff;
+        }
+
+        .document-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .file-icon {
+            width: 43px;
+            height: 43px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 10px;
+            font-size: 21px;
+        }
+
+        .document-name {
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 650;
+            overflow-wrap: anywhere;
+            margin-bottom: 6px;
+        }
+
+        .document-type {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .open-link {
+            display: inline-block;
+            flex-shrink: 0;
+            text-decoration: none;
+            color: #2563eb;
+            background: #eff6ff;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .open-link:hover {
+            background: #dbeafe;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 38px 20px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        .empty-icon {
+            display: block;
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        /* Podnožje */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 20px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                padding: 17px 20px;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            .logout-btn {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .container {
+                margin: 30px auto;
+                padding: 0 16px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .card,
+            .documents-card {
+                padding: 21px;
+            }
+
+            .documents-header h2 {
+                font-size: 19px;
+            }
+
+            .document-item {
+                align-items: flex-start;
+                flex-wrap: wrap;
+                padding: 14px;
+            }
+
+            .open-link {
+                margin-left: 57px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>{{ asset.name }}</h1>
-    <p>{{ asset.description }}</p>
-    <p>Lokacija: {{ asset.location }}</p>
 
-    <h2>Dokumenta</h2>
-    <ul>
-        {% for doc in documents %}
-            <li>
-                <a href="{{ doc.file.url }}">{{ doc.title }}</a>
-                ({{ doc.document_type }})
-            </li>
-        {% empty %}
-            <li>Nema dokumenata za ovu opremu.</li>
-        {% endfor %}
-    </ul>
+    <header class="navbar">
+        <div class="brand">
+            EVIDENCIJA <span>OPREME</span>
+        </div>
 
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Odjavi se</button>
-    </form>
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">
+                Odjavi se ↗
+            </button>
+        </form>
+    </header>
+
+    <main class="container">
+
+        <div class="page-label">Pregled opreme</div>
+
+        <h1 class="page-title">{{ asset.name }}</h1>
+
+        <p class="page-subtitle">
+            Pregled osnovnih informacija i prateće dokumentacije za ovu opremu.
+        </p>
+
+        <section class="details-grid">
+
+            <article class="card">
+                <div class="card-heading">
+                    <div class="icon">▤</div>
+                    <h2>Opis opreme</h2>
+                </div>
+
+                <p class="field-label">Detaljne informacije</p>
+
+                <p class="field-value">
+                    {{ asset.description|default:"Opis nije dostupan." }}
+                </p>
+            </article>
+
+            <article class="card">
+                <div class="card-heading">
+                    <div class="icon">⌖</div>
+                    <h2>Lokacija</h2>
+                </div>
+
+                <p class="field-label">Mjesto na kojem se oprema nalazi</p>
+
+                <p class="field-value">
+                    <span class="location-value">
+                        {{ asset.location|default:"Lokacija nije navedena." }}
+                    </span>
+                </p>
+            </article>
+
+        </section>
+
+        <section class="documents-card">
+
+            <div class="documents-header">
+                <h2>Dokumentacija</h2>
+                <span class="documents-count">Dokumenti</span>
+            </div>
+
+            <ul class="document-list">
+
+                {% for doc in documents %}
+                    <li class="document-item">
+
+                        <div class="document-info">
+                            <div class="file-icon">📄</div>
+
+                            <div>
+                                <p class="document-name">
+                                    {{ doc.title }}
+                                </p>
+
+                                <p class="document-type">
+                                    Tip dokumenta: {{ doc.document_type }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <a
+                            href="{{ doc.file.url }}"
+                            class="open-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Otvori dokument ↗
+                        </a>
+
+                    </li>
+
+                {% empty %}
+                    <li class="empty-state">
+                        <span class="empty-icon">📂</span>
+                        <strong>Nema dokumenata</strong>
+                        <p>Trenutno nema dokumenata za ovu opremu.</p>
+                    </li>
+                {% endfor %}
+
+            </ul>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        Evidencija opreme &bull; Pregled detalja i dokumentacije
+    </footer>
+
 </body>
 </html>
+```

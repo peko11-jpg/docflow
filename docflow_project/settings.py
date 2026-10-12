@@ -1,11 +1,14 @@
-
+import os
+from dotenv import load_dotenv
 
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-c+4%tqdx3xn3si#m9$g$lzc%x(xb$)^93a&f(^@_zq(7d095@2"
+load_dotenv()
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
@@ -61,8 +64,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'docflow_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'postgres', 
+        "PASSWORD": os.getenv("DB_PASSWORD"),
         'HOST': 'localhost',
         'PORT': '5432',
     }

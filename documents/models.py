@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
+from .middleware import current_user
+from django.db import models, transaction
 
 class Asset(models.Model):
     name = models.CharField(max_length=200)
@@ -37,6 +39,20 @@ class Document(models.Model):
     def __str__(self):
         return f"{self.title} (v{self.version})"
 
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            with transaction.atomic():
+                previous = Document.objects.filter(
+                    asset=self.asset, title=self.title, is_current=True
+                ).order_by('-version').first()
+                if previous:
+                    self.version = previous.version + 1
+                    self.previous_version = previous
+                    Document.objects.filter(pk=previous.pk).update(is_current=False)
+                super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
+
 class Profile(models.Model):
     ROLE_CHOICES = [
         ('worker', 'Radnik'),
@@ -50,7 +66,9 @@ class Profile(models.Model):
 
 
 def log_action(sender, instance, action, **kwargs):
+    user = current_user.get()
     AuditLog.objects.create(
+        user_id=user.pk if user and user.is_authenticated else None,
         action=action,
         model_name=sender.__name__,
         object_id=instance.pk,

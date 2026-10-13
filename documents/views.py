@@ -9,7 +9,7 @@ from rest_framework import viewsets, permissions, filters
 def asset_detail(request, slug):
     tag = get_object_or_404(NFCTag, slug=slug)
     asset = tag.asset
-    documents = asset.documents.all()
+    documents = asset.documents.filter(is_current=True)
     return render(request, 'documents/asset_detail.html', {
         'asset': asset,
         'documents': documents,

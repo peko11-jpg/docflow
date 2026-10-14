@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from .middleware import current_user
 from django.db import models, transaction
+from .tasks import notify_new_document
 
 class Asset(models.Model):
     name = models.CharField(max_length=200)
@@ -114,3 +115,7 @@ def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
+@receiver(post_save, sender=Document)
+def notify_on_new_document(sender, instance, created, **kwargs):
+    if created:
+        transaction.on_commit(lambda: notify_new_document.delay(instance.pk))

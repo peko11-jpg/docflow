@@ -1,0 +1,87 @@
+# DocFlow
+
+![CI](https://github.com/peko11-jpg/docflow/actions/workflows/ci.yml/badge.svg)
+
+Document & asset management system. Attach an NFC sticker to a physical folder or piece of equipment, and scanning it with a phone opens a page listing every current document for that item.
+
+```
+NFC tag → phone opens URL → Django looks up the asset by slug → PostgreSQL → document list
+```
+
+## Features
+
+- **Assets and NFC tags**: each asset (folder, equipment) has a unique slug; the tag stores the URL `/asset/<slug>/`
+- **Authentication**: login required for pages, API and file downloads; `Profile` model with `worker` / `admin` roles, created automatically for every new user
+- **Document versioning**: uploading a document with the same title on the same asset creates a new version and archives the old one; only current versions are shown
+- **Audit log**: create / update / delete of assets and documents is recorded, including the acting user (via middleware)
+- **Protected downloads**: files are never served directly; a login-protected view streams them
+- **REST API** (Django REST Framework): `/api/assets/` and `/api/documents/` with pagination and search (`?search=`)
+- **Background tasks**: Celery + Redis; a task is queued when a new document is uploaded (currently a simulated notification)
+- **Tests and CI**: 10 automated tests, run on every push with GitHub Actions
+- **Docker**: development and production Compose setups
+
+## Tech stack
+
+Python 3.13, Django 6.1, Django REST Framework, PostgreSQL, Redis, Celery, Gunicorn, WhiteNoise, Docker Compose, GitHub Actions.
+
+## Quick start (development)
+
+1. Clone the repo and create a `.env` file in the project root:
+
+```
+SECRET_KEY=change-me
+DB_PASSWORD=change-me
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+```
+
+2. Start the containers and set up the database:
+
+```
+docker compose up --build
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+```
+
+3. Open http://localhost:8000/admin/, then:
+   - create an **Asset**
+   - create an **NFC tag** for it with a slug, e.g. `compressor-1`
+   - upload a **Document** to the asset
+4. Visit http://localhost:8000/asset/compressor-1/ (login required).
+
+## NFC setup
+
+Write the URL `https://<your-host>/asset/<slug>/` to an NFC sticker with any NFC writer app (for example NFC Tools on Android). Scanning the sticker with a phone opens the page. The phone must be able to reach the server (same Wi-Fi network in development).
+
+## API
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/assets/` | List assets with their documents (paginated, `?search=`) |
+| `GET /api/documents/` | List documents (paginated, `?search=`) |
+| `GET /download/<id>/` | Download a document (login required) |
+
+All API endpoints require authentication.
+
+## Tests
+
+```
+docker compose exec web python manage.py test
+```
+
+## Production setup
+
+```
+cp .env.prod.example .env.prod        # fill in SECRET_KEY and DB_PASSWORD
+docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
+docker compose --env-file .env.prod -f docker-compose.prod.yml exec web python manage.py createsuperuser
+```
+
+The production setup runs Gunicorn, applies migrations and collects static files on start, and keeps the database and uploaded files in persistent volumes. Set `USE_HTTPS=True` when serving behind an HTTPS reverse proxy.
+
+## Roadmap
+
+- Fine-grained, role-based permissions
+- Reverse proxy with HTTPS
+- OCR for uploaded documents (full-text search)
+- Real notifications (email / push) from the Celery task

@@ -418,14 +418,7 @@
                             </div>
                         </div>
 
-                        <a
-                            href="{{ doc.file.url }}"
-                            class="open-link"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Otvori dokument ↗
-                        </a>
+                        <a href="{% url 'download_document' doc.pk %}">{{ doc.title }}</a>
 
                     </li>
 

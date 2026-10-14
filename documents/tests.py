@@ -82,3 +82,15 @@ class DocFlowTests(TestCase):
         response = client.get('/api/assets/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['count'], 1)
+
+    def test_download_requires_login(self):
+        doc = self.make_doc()
+        response = self.client.get(reverse('download_document', args=[doc.pk]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_download_returns_file_for_logged_in_user(self):
+        doc = self.make_doc()
+        self.client.login(username='radnik', password='test1234')
+        response = self.client.get(reverse('download_document', args=[doc.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(b''.join(response.streaming_content), b'sadrzaj')

@@ -9,4 +9,5 @@ router.register(r'documents', views.DocumentViewSet)
 urlpatterns = [
     path('asset/<slug:slug>/', views.asset_detail, name='asset_detail'),
     path('api/', include(router.urls)),
+    path('download/<int:pk>/', views.download_document, name='download_document'),
 ]
